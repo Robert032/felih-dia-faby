@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="imagenes/fabyGamer.jpg" type="image/x-icon">
+    <title>¡Feliz Cumpleaños Faby! 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        /* Slide de inicio */
+        .slide-intro {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .slide-intro h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5rem;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: bounceIn 1.5s ease;
+        }
+
+        .slide-intro .emoji {
+            font-size: 4rem;
+            animation: rotate 2s infinite ease-in-out;
+        }
+
+        /* Slides de contenido */
+        .content-wrapper {
+            max-width: 900px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease;
+        }
+
+        .slide h2 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .slide p {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .slide strong {
+            font-weight: 600;
+            color: #ffd700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Slide con foto */
+        .slide-photo {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .photo-container {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 8px solid white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            margin-bottom: 30px;
+            animation: scaleIn 1.2s ease;
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Galería de fotos */
+        .photo-gallery {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .gallery-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            animation: fadeInScale 0.8s ease forwards;
+        }
+
+        .gallery-photo:nth-child(1) {
+            transform: rotate(-5deg);
+            animation-delay: 0.1s;
+        }
+
+        .gallery-photo:nth-child(2) {
+            transform: rotate(3deg);
+            animation-delay: 0.2s;
+        }
+
+        .gallery-photo:nth-child(3) {
+            transform: rotate(-3deg);
+            animation-delay: 0.3s;
+        }
+
+        .gallery-photo:nth-child(4) {
+            transform: rotate(4deg);
+            animation-delay: 0.4s;
+        }
+
+        .gallery-photo:hover {
+            transform: scale(1.15) rotate(0deg) !important;
+            z-index: 10;
+        }
+
+        .gallery-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Controles de navegación */
+        .nav-controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .dots {
+            display: flex;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        /* Animaciones */
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(-100px);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes rotate {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(-15deg);
+            }
+            75% {
+                transform: rotate(15deg);
+            }
+        }
+
+        /* Gradientes de fondo para cada slide */
+        .slide-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .slide-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .slide-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .slide-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .slide-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .slide-6 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+        .slide-7 { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); }
+        
+        .slide-7 h2 {
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+        }
+        
+        .slide-7 p {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide h1 {
+                font-size: 3rem;
+            }
+            
+            .slide h2 {
+                font-size: 2rem;
+            }
+            
+            .slide p {
+                font-size: 1.2rem;
+            }
+            
+            .content-wrapper {
+                padding: 30px;
+            }
+            
+            .photo-container {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .gallery-photo {
+                width: 90px;
+                height: 90px;
+            }
+        }
+
+        /* Confetti animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            position: absolute;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <!-- Slide 1: Portada -->
+        <div class="slide active slide-intro slide-1">
+            <h1>¡Feliz Cumpleaños Faby!</h1>
+            <div class="emoji">🎉🎂🎈</div>
+        </div>
+
+        <!-- Slide 2: La mejor amistad -->
+        <div class="slide slide-2">
+            <div class="content-wrapper">
+                <h2>Única 💝</h2>
+                <p>
+                    Faby... Probablemente nunca vas a entender que sos 
+                    <strong>la mejor amistad que jamás pude tener</strong>. 
+                    Estoy seguro que todo el mundo necesita a alguien como vos en su vida.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Mujer ejemplo -->
+        <div class="slide slide-3">
+            <div class="content-wrapper">
+                <h2>Mujer Ejemplo 😌⭐</h2>
+                <p>
+                    Sos una <strong>mujer admirable</strong>, de las que inspiran con su forma de ser. 
+                    <strong>Nunca me juzgáste</strong>. Siempre supiste  escuchar y entender, 
+                    haciendo que cada persona a tu alrededor se sienta valorada y querida.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Siempre en mi corazón -->
+        <div class="slide slide-4">
+            <div class="content-wrapper">
+                <h2>En Mi 💖</h2>
+                <p>
+                    Quiero que sepas que <strong>siempre te voy a tener en mi corazón</strong>. 
+                    No hay chance de que me olvide mba'e de vos, ya te volviste una 
+                    parte importante de mi vida, así que para deshacerte de mi, medio imposible es🤪🤣.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Cuenta conmigo -->
+        <div class="slide slide-5">
+            <div class="content-wrapper">
+                <h2>Contá Conmigo 🤝</h2>
+                <p>
+                    Para todo lo bueno y malo que enfrentes en tu futuro, 
+                    <strong>contá conmigo</strong>. En las risas, en las lágrimas, 
+                    en los logros y en los desafíos. Siempre voy a estar acá para vos.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Foto -->
+        <div class="slide slide-photo slide-6">
+            <div class="photo-container">
+                <img src="imagenes/Faby-1-palacio.jpeg" alt="Faby">
+            </div>
+            <div class="content-wrapper">
+                <h2>Hacés la Diferencia Faby ✨</h2>
+                <p>
+                    Tu presencia ilumina mi vida y la de todos los que te rodean. 
+                    Gracias por ser como sos. ¡Feliz cumpleaños! 🥳🎊
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Final con galería -->
+        <div class="slide slide-7">
+            <div class="content-wrapper">
+                <h2>¡Que los Cumplas Felih! 😭❤🎉</h2>
+                <p>
+                    Te deseo lo mejor en esta vida, porque lo merecés. 
+                    Te merecés todo y más. 
+                    <strong>¡Feliz cumpleaños, Faby!</strong> 🎂🎈💝
+                </p>
+                <div class="photo-gallery">
+                    <div class="gallery-photo">
+                        <img src="imagenes/Faby-1-palacio-perfil.jpeg" alt="Faby">
+                    </div>
+                    <div class="gallery-photo">
+                        <img src="imagenes/Faby-1-bebida.jpeg" alt="Faby">
+                    </div>
+                    <div class="gallery-photo">
+                        <img src="imagenes/Faby-robert-2-defensa.jpeg" alt="Faby">
+                    </div>
+                    <div class="gallery-photo">
+                        <img src="imagenes/Faby-robert-2-palacio.jpeg" alt="Faby">
+                    </div>
+                </div>
+                <p style="font-family: 'Dancing Script', cursive; font-size: 2rem; margin-top: 20px;">
+                    Con todo mi cariño, siempre ❤️
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controles de navegación -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn">◀</button>
+        <div class="dots" id="dotsContainer"></div>
+        <button class="nav-btn" id="nextBtn">▶</button>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const dotsContainer = document.getElementById('dotsContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentSlide = 0;
+
+        // Crear dots
+        slides.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlide();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlide();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlide();
+        }
+
+        // Event listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Auto-advance (opcional, descomenta para activar)
+        // setInterval(nextSlide, 8000);
+
+        // Crear confetti al cargar
+        function createConfetti() {
+            const colors = ['#ff0080', '#00ff80', '#0080ff', '#ffff00', '#ff00ff'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 100);
+            }
+        }
+
+        createConfetti();
+    </script>
+</body>
+</html>
